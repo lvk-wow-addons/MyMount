@@ -1,0 +1,7 @@
+## Interface: 70300
+## Title: MyMount
+## Notes: 
+## Author: Lasse Vågsæther KArlsen
+## Version: 0.10.0
+## DefaultState: Enabled
+MyMount.lua
