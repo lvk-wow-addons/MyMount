@@ -40,7 +40,13 @@ function MyMount_DoIt()
 	if IsMounted() then
 		Dismount()
 		return
-	end
+    end
+    
+    if IsShiftKeyDown() and IsAltKeyDown() then
+        if MyMount_TrySummonMount("Azure Water Strider") then
+            return
+        end
+    end
 
     if IsAltKeyDown() then
         if MyMount_TrySummonMount("Grand Expedition Yak") then
@@ -49,6 +55,11 @@ function MyMount_DoIt()
     end
 
     if IsSwimming() then
+        if IsShiftKeyDown() then
+            if MyMount_TrySummonMount("Azure Water Strider") then
+                return
+            end
+        end
         if not IsControlKeyDown() then
             if MyMount_TrySummonMount("Subdued Seahorse") then
                 return
@@ -118,6 +129,9 @@ function MyMount_IsFriend(name)
     if name == "Darionarys" then
         return true
     end
+    if name == "Éärwen" then
+        return true
+    end
 
     return false
 end
@@ -139,7 +153,7 @@ function MyMount_InPartyWithFriend()
 end
 
 function MyMount_GetFlyingMount()
-    if IsInGroup() or IsInRaid() or IsControlKeyDown() then
+    if IsControlKeyDown() then
         return "Sandstone Drake"
     end
 
