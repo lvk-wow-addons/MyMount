@@ -3,12 +3,12 @@ MyMount_FlyingMounts = {
     ["Cabbot/Holy"] = "Albino Drake",
     ["Cabbot/Shadow"] = "Twilight Drake",
 
-    ["Arxas/Fire"] = "Bronze Drake",
-    ["Arxas/Frost"] = "Twilight Drake",
+    ["Arxas"] = {"Violet Spellwing", "Twilight Drake", "Black Drake"},
     ["Praxis"] = "Twilight Drake",
     ["Cabbeth"] = "Winged Steed of the Ebon Blade",
+    ["Phimi/Restoration"] = "Hearthsteed",
 
-    ["default"] = "Twilight Drake",
+    ["default"] = {"Twilight Drake", "Black Drake", "Headless Horseman's Mount", "Violet Spellwing"},
 }
 
 MyMount_GroundMounts = {
@@ -20,8 +20,9 @@ MyMount_GroundMounts = {
 
     ["Praxis"] = "Felsaber",
     ["Cabbeth"] = "Acherus Deathcharger",
+    ["Phimi/Restoration"] = "Hearthsteed",
 
-    ["default"] = "Headless Horseman's Mount",
+    ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
 }
 
 function MyMount_ChatPrint(str)
@@ -165,7 +166,15 @@ function MyMount_GetFlyingMount()
     return MyMount_FlyingMounts[key] or MyMount_FlyingMounts[UnitName("player")] or MyMount_FlyingMounts["default"]
 end
 
-function MyMount_TrySummonMount(name)
+function MyMount_TrySummonMount(mounts)
+    if type(mounts) == "string" then
+        return MyMount_TrySummonMountByName(mounts)
+    end
+
+    return MyMount_TrySummonMountByName(mounts[math.random(#mounts)])
+end
+
+function MyMount_TrySummonMountByName(name)
 	local mounts = C_MountJournal.GetMountIDs()
 	for i=1,#mounts do
 		local creatureName, spellID, icon, active, isUsable, sourceType = C_MountJournal.GetMountInfoByID(mounts[i])
