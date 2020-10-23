@@ -3,7 +3,7 @@ MyMount_FlyingMounts = {
     ["Cabbot/Holy"] = "Albino Drake",
     ["Cabbot/Shadow"] = "Twilight Drake",
 
-    ["Arxas"] = {"Violet Spellwing", "Twilight Drake", "Black Drake"},
+    ["Arxas"] = {"Archmage's Prismatic Disc", "Violet Spellwing", "Twilight Drake", "Black Drake"},
     ["Praxis"] = "Twilight Drake",
     ["Cabbeth"] = "Winged Steed of the Ebon Blade",
     ["Phimi/Restoration"] = "Hearthsteed",
@@ -16,7 +16,7 @@ MyMount_GroundMounts = {
     ["Cabbot/Holy"] = "Swift White Ram",
     -- ["Cabbot/Shadow"] = "",
 
-    ["Arxas"] = "Llothien Prowler",
+    ["Arxas"] = { "Llothien Prowler", "Archmage's Prismatic Disc" },
 
     ["Praxis"] = "Felsaber",
     ["Cabbeth"] = "Acherus Deathcharger",
@@ -24,18 +24,6 @@ MyMount_GroundMounts = {
 
     ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
 }
-
-function MyMount_ChatPrint(str)
-	DEFAULT_CHAT_FRAME:AddMessage("[MyMount] "..str, 0.25, 1.0, 0.25)
-end
-
-function MyMount_ErrorPrint(str)
-	DEFAULT_CHAT_FRAME:AddMessage("[MyMount] "..str, 1.0, 0.5, 0.5)
-end
-
-function MyMount_DebugPrint(str)
-	DEFAULT_CHAT_FRAME:AddMessage("[MyMount] "..str, 0.75, 1.0, 0.25)
-end
 
 function MyMount_DoIt()
 	if IsMounted() then
@@ -68,8 +56,8 @@ function MyMount_DoIt()
         end
     end
 
-    local lib = LibStub("LibFlyable")
-    local isFlyable = lib:IsFlyableArea()
+    -- local lib = LibStub("LibFlyable")
+    local isFlyable = IsFlyableArea()
     if isFlyable then
         if IsShiftKeyDown() then
             if MyMount_TrySummonMount(MyMount_GetGroundMount()) then
@@ -179,7 +167,7 @@ function MyMount_TrySummonMountByName(name)
 	for i=1,#mounts do
 		local creatureName, spellID, icon, active, isUsable, sourceType = C_MountJournal.GetMountInfoByID(mounts[i])
 		if isUsable then
-			-- MyMount_DebugPrint("Mount #" .. tostring(i) .. ": " .. creatureName)
+			-- LVK:Debug("Mount #" .. tostring(i) .. ": " .. creatureName)
 			if creatureName == name then
 				C_MountJournal.SummonByID(mounts[i])
 				return true
@@ -189,3 +177,5 @@ function MyMount_TrySummonMountByName(name)
 	
 	return false
 end
+
+LVK:AnnounceAddon("MyMount");

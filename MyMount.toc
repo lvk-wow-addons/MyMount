@@ -1,7 +1,8 @@
-## Interface: 80200
+## Interface: 90001
 ## Title: MyMount
 ## Notes: 
-## Author: Lasse Vågsæther KArlsen
-## Version: 0.10.0
+## Author: Lasse Vågsæther Karlsen
+## Version: 0.20.0
 ## DefaultState: Enabled
+## RequiredDeps: LVK
 MyMount.lua
