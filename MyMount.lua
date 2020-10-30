@@ -3,10 +3,11 @@ MyMount_FlyingMounts = {
     ["Cabbot/Holy"] = "Albino Drake",
     ["Cabbot/Shadow"] = "Twilight Drake",
 
-    ["Arxas"] = {"Archmage's Prismatic Disc", "Violet Spellwing", "Twilight Drake", "Black Drake"},
+    ["Arxas"] = {"Archmage's Prismatic Disc"},
     ["Praxis"] = "Twilight Drake",
     ["Cabbeth"] = "Winged Steed of the Ebon Blade",
     ["Phimi/Restoration"] = "Hearthsteed",
+    ["Cabboth"] = { "Twilight Drake" },
 
     ["default"] = {"Twilight Drake", "Black Drake", "Headless Horseman's Mount", "Violet Spellwing"},
 }
@@ -21,6 +22,7 @@ MyMount_GroundMounts = {
     ["Praxis"] = "Felsaber",
     ["Cabbeth"] = "Acherus Deathcharger",
     ["Phimi/Restoration"] = "Hearthsteed",
+    ["Cabboth"] = "Headless Horseman's Mount",
 
     ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
 }
@@ -30,35 +32,33 @@ function MyMount_DoIt()
 		Dismount()
 		return
     end
-    
-    if IsShiftKeyDown() and IsAltKeyDown() then
-        if MyMount_TrySummonMount("Azure Water Strider") then
-            return
-        end
-    end
 
-    if IsAltKeyDown() then
-        if MyMount_TrySummonMount("Grand Expedition Yak") then
-            return
-        end
-    end
-
-    if IsSwimming() then
+    if IsSwimming() and IsAltKeyDown() then
         if IsShiftKeyDown() then
             if MyMount_TrySummonMount("Azure Water Strider") then
                 return
             end
         end
-        if not IsControlKeyDown() then
-            if MyMount_TrySummonMount("Subdued Seahorse") then
-                return
-            end
+        if MyMount_TrySummonMount("Subdued Seahorse") then
+            return
         end
     end
 
+    if IsAltKeyDown() then
+        if IsShiftKeyDown() then
+            if MyMount_TrySummonMount("Grand Expedition Yak") then
+                return
+            end
+        end
+
+        if MyMount_TrySummonMount("Traveler's Tundra Mammoth") then
+            return
+        end
+    end
+    
     -- local lib = LibStub("LibFlyable")
     local isFlyable = IsFlyableArea()
-    if isFlyable then
+    if isFlyable and (UnitLevel("player") >= 30) then
         if IsShiftKeyDown() then
             if MyMount_TrySummonMount(MyMount_GetGroundMount()) then
                 return
