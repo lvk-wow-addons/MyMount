@@ -7,7 +7,8 @@ MyMount_FlyingMounts = {
     ["Praxis"] = "Twilight Drake",
     ["Cabbeth"] = "Winged Steed of the Ebon Blade",
     ["Phimi/Restoration"] = "Hearthsteed",
-    ["Cabboth"] = { "Twilight Drake" },
+    ["Aerie Peak/Cabboth"] = { "High Priest's Lightsworn Seeker" },
+    ["Kazzak/Cabboth"] = "Twilight Drake",
 
     ["default"] = {"Twilight Drake", "Black Drake", "Headless Horseman's Mount", "Violet Spellwing"},
 }
@@ -22,9 +23,20 @@ MyMount_GroundMounts = {
     ["Praxis"] = "Felsaber",
     ["Cabbeth"] = "Acherus Deathcharger",
     ["Phimi/Restoration"] = "Hearthsteed",
-    ["Cabboth"] = "Headless Horseman's Mount",
+    ["Cabboth"] = "High Priest's Lightsworn Seeker",
+
+    ["Kazzak/Cabboth"] = "Black Skeletal Horse",
 
     ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
+}
+
+MyMount_Friends = {
+    "Starblade",
+    "kithkin",
+    "Kristian Dovik",
+    "Dionarys",
+    "Darionarys",
+    "Éärwen"
 }
 
 function MyMount_DoIt()
@@ -60,66 +72,111 @@ function MyMount_DoIt()
     local isFlyable = IsFlyableArea()
     if isFlyable and (UnitLevel("player") >= 30) then
         if IsShiftKeyDown() then
-            if MyMount_TrySummonMount(MyMount_GetGroundMount()) then
+            if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
                 return
             end
         else
-            if MyMount_TrySummonMount(MyMount_GetFlyingMount()) then
+            if MyMount_TrySummonMount(MyMount_GetMount(MyMount_FlyingMounts)) then
                 return
             end
         end
 
-        if MyMount_TrySummonMount(MyMount_GetFlyingMount()) then
+        if MyMount_TrySummonMount(MyMount_GetMount(MyMount_FlyingMounts)) then
             return
         end
     end
     
     if (IsShiftKeyDown()) then
-        if MyMount_TrySummonMount(MyMount_GetFlyingMount()) then
+        if IsUsableSpell(368896) then
+            if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
+                return
+            end
+            C_MountJournal.SummonByID(1589)
+            return
+        end
+        if MyMount_TrySummonMount(MyMount_GetMount(MyMount_FlyingMounts)) then
             return
         end
     end
+    if IsUsableSpell(368896) then
+        C_MountJournal.SummonByID(1589)
+        return
+    end
 
-    if MyMount_TrySummonMount(MyMount_GetGroundMount()) then
+    if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
         return
     end
 end
 
-function MyMount_GetKey()
-    local spec = GetSpecialization()
-    local id, name, description, icon, background, role = GetSpecializationInfo(spec)
-
-    return UnitName("player") .. "/" .. name
-end
-
-function MyMount_GetKey()
+function MyMount_GetKeys()
+    local class = UnitClass("player")
+    local realm = GetRealmName()
     local name = UnitName("player")
+    local faction = UnitFactionGroup("player")
     local spec = GetSpecialization()
     local id, specName, description, icon, background, role = GetSpecializationInfo(spec)
 
-    local key = name .. "/" .. specName
-
-    return key
+    return {
+        realm .. "/" .. faction .. "/" .. class .. "/" .. name .. "/" .. specName,
+        realm .. "/" .. faction .. "/" .. class .. "/" .. name,
+        realm .. "/" .. faction .. "/" .. class .. "/" .. specName,
+        realm .. "/" .. faction .. "/" .. class,
+        realm .. "/" .. faction .. "/" .. name .. "/" .. specName,
+        realm .. "/" .. faction .. "/" .. name,
+        realm .. "/" .. faction .. "/" .. specName,
+        realm .. "/" .. faction,
+        realm .. "/" .. class .. "/" .. name .. "/" .. specName,
+        realm .. "/" .. class .. "/" .. name,
+        realm .. "/" .. class .. "/" .. specName,
+        realm .. "/" .. class,
+        realm .. "/" .. name .. "/" .. specName,
+        realm .. "/" .. name,
+        realm .. "/" .. specName,
+        realm,
+        faction .. "/" .. class .. "/" .. name .. "/" .. specName,
+        faction .. "/" .. class .. "/" .. name,
+        faction .. "/" .. class .. "/" .. specName,
+        faction .. "/" .. class,
+        faction .. "/" .. name .. "/" .. specName,
+        faction .. "/" .. name,
+        faction .. "/" .. specName,
+        faction,
+        class .. "/" .. name .. "/" .. specName,
+        class .. "/" .. name,
+        class .. "/" .. specName,
+        class,
+        name .. "/" .. specName,
+        name,
+        specName,
+        "default"
+    }
 end
 
-function MyMount_GetGroundMount()
+function MyMount_GetMount(mounts)
     if IsControlKeyDown() then
         return "Sandstone Drake"
     end
 
-    local key = MyMount_GetKey()
-    return MyMount_GroundMounts[key] or MyMount_GroundMounts[UnitName("player")] or MyMount_GroundMounts["default"]
+    if MyMount_InPartyWithFriend() then
+        return "Sandstone Drake"
+    end
+
+    local keys = MyMount_GetKeys()
+	for i=1,#keys do
+        local key = keys[i]
+        local mount = mounts[key]
+        if mount then
+            LVK:Debug("|g|" .. key .. "|<| = |g|" .. mount)
+            return mount
+        end
+    end
 end
 
 function MyMount_IsFriend(name)
-    if name == "Dionarys" then
-        return true
-    end
-    if name == "Darionarys" then
-        return true
-    end
-    if name == "Éärwen" then
-        return true
+    for index, value in ipairs(MyMount_Friends) do
+        if value == name then
+            return true
+        end
     end
 
     return false
@@ -139,19 +196,6 @@ function MyMount_InPartyWithFriend()
         return true
     end
     return false
-end
-
-function MyMount_GetFlyingMount()
-    if IsControlKeyDown() then
-        return "Sandstone Drake"
-    end
-
-    if MyMount_InPartyWithFriend() then
-        return "Sandstone Drake"
-    end
-
-    local key = MyMount_GetKey()
-    return MyMount_FlyingMounts[key] or MyMount_FlyingMounts[UnitName("player")] or MyMount_FlyingMounts["default"]
 end
 
 function MyMount_TrySummonMount(mounts)
