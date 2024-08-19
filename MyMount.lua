@@ -3,12 +3,13 @@ MyMount_FlyingMounts = {
     ["Cabbot/Holy"] = "Albino Drake",
     ["Cabbot/Shadow"] = "Twilight Drake",
 
-    ["Arxas"] = {"Archmage's Prismatic Disc"},
+    ["Mage"] = {"Archmage's Prismatic Disc"},
     ["Praxis"] = "Twilight Drake",
     ["Cabbeth"] = "Winged Steed of the Ebon Blade",
     ["Phimi/Restoration"] = "Hearthsteed",
     ["Aerie Peak/Cabboth"] = { "High Priest's Lightsworn Seeker" },
     ["Kazzak/Cabboth"] = "Twilight Drake",
+    ["Death Knight"] = "Amalgam of Rage",
 
     ["default"] = {"Twilight Drake", "Black Drake", "Headless Horseman's Mount", "Violet Spellwing"},
 }
@@ -18,7 +19,7 @@ MyMount_GroundMounts = {
     ["Cabbot/Holy"] = "Swift White Ram",
     -- ["Cabbot/Shadow"] = "",
 
-    ["Arxas"] = { "Llothien Prowler", "Archmage's Prismatic Disc" },
+    ["Mage"] = "Archmage's Prismatic Disc",
 
     ["Praxis"] = "Felsaber",
     ["Cabbeth"] = "Acherus Deathcharger",
@@ -26,8 +27,13 @@ MyMount_GroundMounts = {
     ["Cabboth"] = "High Priest's Lightsworn Seeker",
 
     ["Kazzak/Cabboth"] = "Black Skeletal Horse",
+    ["Death Knight"] = "Acherus Deathcharger",
 
     ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
+}
+
+MyMount_DragonFlightMounts = {
+    ["default"] = "Cliffside Wylderdrake"
 }
 
 MyMount_Friends = {
@@ -58,12 +64,12 @@ function MyMount_DoIt()
 
     if IsAltKeyDown() then
         if IsShiftKeyDown() then
-            if MyMount_TrySummonMount("Grand Expedition Yak") then
+            if MyMount_TrySummonMount("Traveler's Tundra Mammoth") then
                 return
             end
         end
 
-        if MyMount_TrySummonMount("Traveler's Tundra Mammoth") then
+        if MyMount_TrySummonMount("Grand Expedition Yak") then
             return
         end
     end
@@ -87,20 +93,22 @@ function MyMount_DoIt()
     end
     
     if (IsShiftKeyDown()) then
-        if IsUsableSpell(368896) then
+        if C_Spell.IsSpellUsable(368896) then
             if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
                 return
             end
-            C_MountJournal.SummonByID(1589)
-            return
+            if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
+                return
+            end
         end
         if MyMount_TrySummonMount(MyMount_GetMount(MyMount_FlyingMounts)) then
             return
         end
     end
-    if IsUsableSpell(368896) then
-        C_MountJournal.SummonByID(1589)
-        return
+    if C_Spell.IsSpellUsable(368896) then
+        if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
+            return
+        end
     end
 
     if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
@@ -165,6 +173,10 @@ function MyMount_GetMount(mounts)
 	for i=1,#keys do
         local key = keys[i]
         local mount = mounts[key]
+        if type(mount) == "table" then
+            mount = mount[math.random(#mount)]
+        end
+        
         if mount then
             LVK:Debug("|g|" .. key .. "|<| = |g|" .. mount)
             return mount
