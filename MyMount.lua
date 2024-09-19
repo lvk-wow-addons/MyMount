@@ -1,17 +1,19 @@
 MyMount_FlyingMounts = {
     ["Cabbot/Discipline"] = "Twilight Drake",
     ["Cabbot/Holy"] = "Albino Drake",
-    ["Cabbot/Shadow"] = "Twilight Drake",
+    ["Cabbot/Shadow"] = "Algarian Stormrider",
 
     ["Mage"] = {"Archmage's Prismatic Disc"},
-    ["Praxis"] = "Twilight Drake",
-    ["Cabbeth"] = "Winged Steed of the Ebon Blade",
+    ["Praxis"] = "Algarian Stormrider",
+    ["Cabbeth"] = "Algarian Stormrider",
     ["Phimi/Restoration"] = "Hearthsteed",
     ["Aerie Peak/Cabboth"] = { "High Priest's Lightsworn Seeker" },
-    ["Kazzak/Cabboth"] = "Twilight Drake",
-    ["Death Knight"] = "Amalgam of Rage",
+    ["Kazzak/Cabboth"] = "Algarian Stormrider",
+    ["Death Knight"] = "Algarian Stormrider",
+    ["Shaman"] = "Algarian Stormrider",
+    ["Monk"] = "Red Flying Cloud",
 
-    ["default"] = {"Twilight Drake", "Black Drake", "Headless Horseman's Mount", "Violet Spellwing"},
+    ["default"] = {"Dark Phoenix"},
 }
 
 MyMount_GroundMounts = {
@@ -22,14 +24,15 @@ MyMount_GroundMounts = {
     ["Mage"] = "Archmage's Prismatic Disc",
 
     ["Praxis"] = "Felsaber",
-    ["Cabbeth"] = "Acherus Deathcharger",
+    ["Cabbeth"] = "Algarian Stormrider",
     ["Phimi/Restoration"] = "Hearthsteed",
-    ["Cabboth"] = "High Priest's Lightsworn Seeker",
+    ["Cabboth"] = "Algarian Stormrider",
 
     ["Kazzak/Cabboth"] = "Black Skeletal Horse",
-    ["Death Knight"] = "Acherus Deathcharger",
+    ["Death Knight"] = "Algarian Stormrider",
+    ["Monk"] = "Red Flying Cloud",
 
-    ["default"] = {"Headless Horseman's Mount", "Hearthsteed"},
+    ["default"] = {"Algarian Stormrider"},
 }
 
 MyMount_DragonFlightMounts = {
@@ -97,18 +100,18 @@ function MyMount_DoIt()
             if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
                 return
             end
-            if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
-                return
-            end
+            -- if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
+            --     return
+            -- end
         end
         if MyMount_TrySummonMount(MyMount_GetMount(MyMount_FlyingMounts)) then
             return
         end
     end
     if C_Spell.IsSpellUsable(368896) then
-        if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
-            return
-        end
+        -- if MyMount_TrySummonMount(MyMount_GetMount(MyMount_DragonFlightMounts)) then
+        --     return
+        -- end
     end
 
     if MyMount_TrySummonMount(MyMount_GetMount(MyMount_GroundMounts)) then
@@ -162,7 +165,7 @@ end
 
 function MyMount_GetMount(mounts)
     if IsControlKeyDown() then
-        return "Sandstone Drake"
+        return ""
     end
 
     if MyMount_InPartyWithFriend() then
